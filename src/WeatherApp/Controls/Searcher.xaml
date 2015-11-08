@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="WeatherApp.Controls.Searcher"
+             x:Name="_root"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WeatherApp.Controls"
+             xmlns:converters="clr-namespace:WeatherApp.Controls.Converters"
+             MinWidth="150"
+             MinHeight="30"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+        
+        <converters:IsSearchSuggestionsOpenConverter x:Key="isSearchSuggestionsOpenConverter"/>
+        <converters:SearchTextToTextConverter x:Key="searchToTextConverter"/>
+
+    </UserControl.Resources>
+    
+    <Grid>
+
+        <ComboBox x:Name="_searchText" 
+                  IsEditable="True"
+                  VerticalContentAlignment="Center"                  
+                  ItemsSource="{Binding FilteredItems, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"                  
+                  SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=LostFocus}"
+                  TextBoxBase.TextChanged="OnInputChanged">
+
+            <ComboBox.Resources>
+                
+                <!-- little 'hack' to remove the drop down button, although completely retemplating the 
+                     ComboBox control would be a better solution -->
+                <system:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</system:Double>
+                
+            </ComboBox.Resources>
+
+            <ComboBox.IsDropDownOpen>
+
+                <MultiBinding Converter="{StaticResource isSearchSuggestionsOpenConverter}" Mode="OneWay">
+
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}"/>
+
+                    <Binding Path="IsKeyboardFocusWithin" RelativeSource="{RelativeSource Self}" Mode="OneWay"/>
+                    
+                    <Binding Path="SuggestionText" RelativeSource="{RelativeSource FindAncestor, AncestorType=UserControl}" Mode="OneWay"/>
+
+                </MultiBinding>
+                
+            </ComboBox.IsDropDownOpen>
+
+            <ComboBox.Text>
+
+                <MultiBinding Converter="{StaticResource searchToTextConverter}" Mode="OneWay">
+
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}"/>
+
+                    <Binding Path="IsKeyboardFocusWithin" RelativeSource="{RelativeSource Self}" Mode="OneWay"/>
+
+                    <Binding Path="SuggestionText" RelativeSource="{RelativeSource FindAncestor, AncestorType=UserControl}" Mode="OneWay"/>
+                    
+                </MultiBinding>
+
+            </ComboBox.Text>
+
+        </ComboBox>
+            
+    </Grid>
+    
+</UserControl>

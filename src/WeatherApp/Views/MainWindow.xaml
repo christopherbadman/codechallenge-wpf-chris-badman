@@ -1,0 +1,57 @@
+﻿<Window 
+    x:Class="WeatherApp.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
+    xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+    xmlns:controls="clr-namespace:WeatherApp.Controls"
+    Title="{Binding Title}" 
+    Height="640" 
+    Width="640">
+    
+    <Grid>
+
+        <Grid.RowDefinitions>
+            
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            
+            <ColumnDefinition MinWidth="200" MaxWidth="350"/>
+            <ColumnDefinition/>
+            
+        </Grid.ColumnDefinitions>
+        
+        <m:Map 
+            x:Name="_map"
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="3"
+            MouseDown="OnMapMouseFocus"
+            CredentialsProvider="Aqt-nITLU2Iw172Mqp08Xk4-WYjv0mdlLMCgUqHDENNSNJbyXryjDOSKVCv5dPl5"/>        
+        
+        <controls:Searcher
+            x:Name="_searcher"
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="10"
+            SuggestionText="Sök stad..."
+            SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"
+            SearchableItemsSource="{Binding Locations}"
+            SearchService="{Binding SearchService}"/>
+        
+        <controls:ResultCarousel
+            x:Name="_results"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            NoLocationText="Stad hittades ej."
+            Location="{Binding SelectedLocation}"
+            Forecast="{Binding SelectedForecast}"/>
+        
+    </Grid>
+    
+</Window>
